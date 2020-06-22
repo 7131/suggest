@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" type="text/css" href="./standard.css">
+<script src="https://yuji-k64613.github.io/jmjs/tmp/v/0.1/js/jmjs.js"></script>
+<script src="./standard.js"></script>
+
+<title>Siteswap Suggestion Service</title>
+</head>
+
+<body>
+<nav id="top">
+<span><a href="./simple.html">Simple</a></span>
+<span>Standard</span>
+<span><a href="./usage.html">Usage</a></span>
+</nav>
+
+<article>
+<h1>Siteswap Suggestion Service - Standard version</h1>
+<div class="table">
+  <div class="row">
+    <div class="cell"><label for="pattern">Pattern</label></div>
+    <div class="cell"><input type="text" id="pattern" autocomplete="off"><div id="suggest"></div></div>
+    <div class="cell"><input type="button" id="start" value="Start"></div>
+    <div class="cell"><input type="button" id="stop" value="Stop"></div>
+  </div>
+</div>
+
+<div>
+<canvas id="board"></canvas>
+<br>
+<small>JuggleMaster JavaScript Ver1.4.1 &copy; 2013-2020 Yuji Konishi.</small>
+</div>
+
+<section class="box">
+<h2>Settings</h2>
+<div class="table">
+  <div class="row">
+    <div class="cell"><label for="balls">Number of balls</label></div>
+    <div class="cell"><input type="number" name="balls" value="3" id="balls"></div>
+    <div class="cell note"><label for="balls">1 - 35</label></div>
+  </div>
+  <div class="row">
+    <div class="cell"><label for="height">Maximum height</label></div>
+    <div class="cell"><input type="number" name="height" value="5" id="height"></div>
+    <div class="cell note"><label for="height">balls - 35 (= z)</label></div>
+  </div>
+  <div class="row">
+    <div class="cell"><label for="count">Maximum number of candidates</label></div>
+    <div class="cell"><input type="number" name="count" value="10" id="count"></div>
+    <div class="cell note"><label for="count">5 - 100</label></div>
+  </div>
+  <div class="row">
+    <div class="cell"><label for="length">Maximum complement length</label></div>
+    <div class="cell"><input type="number" name="length" value="3" id="length"></div>
+    <div class="cell note"><label for="length">1 - 5</label></div>
+  </div>
+  <div class="row">
+    <div class="cell"><label for="breadth">Search priority direction</label></div>
+    <div class="cell">
+      <div><input type="radio" name="direction" value="breadth" id="breadth" checked="checked"><label for="breadth">Breadth</label></div>
+      <div><input type="radio" name="direction" value="depth" id="depth"><label for="depth">Depth</label></div>
+    </div>
+  </div>
+</div>
+</section>
+
+</article>
+</body>
+
+</html>

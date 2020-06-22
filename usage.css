@@ -1,0 +1,73 @@
+@charset "utf-8";
+
+nav span {
+    margin-right: 1ex;
+}
+
+article {
+    margin-bottom: 10ex;
+}
+
+#pattern {
+    width: 90%;
+    color: black;
+    background-color: white;
+}
+
+table {
+    border: 1px outset gray;
+    border-collapse: collapse;
+}
+
+table tr th {
+    border: 1px inset gray;
+    padding: 0.5ex 1ex;
+}
+
+table tr td {
+    border: 1px inset gray;
+    padding: 0.5ex 1ex;
+}
+
+.valid {
+    background-color: greenyellow;
+}
+
+.error {
+    background-color: pink;
+}
+
+.area {
+    height: 30ex;
+}
+
+.number {
+    text-align: right;
+}
+
+#suggest {
+    position: absolute;
+    border: 1px solid gray;
+    background-color: white;
+}
+
+#suggest div {
+    margin: 0ex;
+    padding: 0.5ex 1ex;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#suggest div.select {
+    color: white;
+    background-color: dodgerblue;
+}
+
+@media (min-width: 768px) {
+
+    #pattern {
+        width: 50ex;
+    }
+
+}
+

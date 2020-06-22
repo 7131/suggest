@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" type="text/css" href="./usage.css">
+
+<title>Siteswap Suggestion Service</title>
+</head>
+
+<body>
+<nav id="top">
+<span><a href="./simple.html">Simple</a></span>
+<span><a href="./standard.html">Standard</a></span>
+<span>Usage</span>
+</nav>
+
+<article>
+<h1>How to use the service</h1>
+<div>
+<p>When you enter a number or alphabet, this service suggests a valid siteswap that starts with that number (or alphabet). Only vanilla siteswaps that don't include multiplex or synchronous are displayed.</p>
+</div>
+
+<section>
+<h2>Standard version</h2>
+<div>
+<p>Siteswap candidates will be displayed according to the settings.</p>
+<div class="area">
+  <input type="text" id="pattern" value="23" disabled="disabled">
+  <div id="suggest">
+    <div>234</div>
+    <div>2334</div>
+    <div class="select">2352</div>
+    <div>23334</div>
+    <div>23352</div>
+    <div>23424</div>
+    <div>23451</div>
+  </div>
+</div>
+<p>There are usually multiple candidates and they are displayed in a drop-down list. If you select one of them, it will be filled in the pattern input field and the drop-down list will disappear. You can also select with the up and down keys and confirm with the Enter key.</p>
+<p>The candidate list changes each time you enter one number. When the pattern itself in the input field is valid as a siteswap, the background of the input field turns green. If the pattern is invalid as a siteswap, and you can't add any numbers to the pattern to make it a siteswap, the background turns pink. Otherwise, when it is invalid as a siteswap but can be a siteswap depending on the added numbers, the background is white.</p>
+<p>If the pattern in the input field is a valid siteswap, press the start button and a JuggleMaster demonstration will be given.</p>
+<p>Only numbers and alphabets (lowercase or uppercase) are valid characters for siteswap. Other characters will be ignored, even if you type them. If you enter 5.31 or (5,3,1) or 5/3=1, they are all considered 531.</p>
+<p>The number of balls in the setting items means that the generated siteswap is actually that number of balls. For example, if you specify 3 here, only 3 ball siteswaps will be output to the candidate list. The minimum value for this setting is 1 and the maximum value is 35.</p>
+<p>The maximum height is the maximum value of the supplementary numbers. If you specify 3 here, numbers from 0 to 3 will be added. It doesn't limit the maximum number you can enter. You can enter 5, and you get 522, but not 504. This is because the number 4 is greater than 3. The minimum value is the same as the number of balls and the maximum value is 35.</p>
+<p>If you increase the maximum number of candidates, more candidates will be displayed. The minimum value is 5 and the maximum value is 100.</p>
+<p>If you increase the maximum complement length, longer siteswaps will be displayed. The minimum value is 1 and the maximum value is 5.</p>
+<p>There are breadth-first search and depth-first search. When you enter 4 on 3 balls, for example, the breadth-first search will list the candidates in order of pattern length as 42, 414, 423, .... While depth-first search will list such as 4044, 4053, 4134, .... They are displayed in the order of the leftmost number, the second number, the third number, and so on. The default is breadth-first search.</p>
+</div>
+</section>
+
+<section>
+<h2>Simplified version</h2>
+<div>
+<p>Unlike the standard version, there are no setting items, and a list of valid siteswaps is displayed regardless of the number of balls. The number of balls is displayed in real time above the pattern input field. This doesn't necessarily become an integer because it is displayed the value calculated mechanically for the pattern in the current input field.</p>
+<p>The setting items other than the number of balls are fixed to the following values.</p>
+<table>
+  <tr><th>Setting items</th><th>Value</th></tr>
+  <tr><td>Maximum height</td><td class="number">35</td></tr>
+  <tr><td>Maximum number of candidates</td><td class="number">10</td></tr>
+  <tr><td>Maximum length to addition</td><td class="number">3</td></tr>
+  <tr><td>Search priority direction</td><td>Breadth</td></tr>
+</table>
+<p>The standard version is a service that searches for practical siteswaps, while the simplified version was developed to search for words.</p>
+</div>
+</section>
+
+</article>
+</body>
+
+</html>
