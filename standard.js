@@ -1,14 +1,14 @@
 // Number list class
-var NumberList = function(pattern) {
+const NumberList = function(pattern) {
     // check the arguments
     if (Array.isArray(pattern)) {
         this.numbers = pattern;
     } else {
         // convert string to number
-        var numbers = [];
-        var lower = pattern.toLowerCase();
-        for (var i = 0; i < lower.length; i++) {
-            var number = this.ALPHABET.indexOf(lower[i]);
+        const numbers = [];
+        const lower = pattern.toLowerCase();
+        for (let i = 0; i < lower.length; i++) {
+            const number = this.ALPHABET.indexOf(lower[i]);
             if (0 <= number) {
                 numbers.push(number);
             }
@@ -38,9 +38,9 @@ NumberList.prototype = {
         }
 
         // check the numbers one by one
-        var drops = new Array(this.length);
-        for (var i = 0; i < this.length; i++) {
-            var index = (this.numbers[i] + i) % this.length;
+        const drops = new Array(this.length);
+        for (let i = 0; i < this.length; i++) {
+            const index = (this.numbers[i] + i) % this.length;
             if (drops[index]) {
                 return false;
             }
@@ -52,11 +52,11 @@ NumberList.prototype = {
     // whether jugglable or not
     "isJugglable": function() {
         // are all the dropping points apart?
-        var drops = {};
-        for (var i = 0; i < this.length; i++) {
+        const drops = {};
+        for (let i = 0; i < this.length; i++) {
             if (this.numbers[i] != 0) {
                 // judge only when throwing the ball
-                var index = this.numbers[i] + i;
+                const index = this.numbers[i] + i;
                 if (index < this.length && this.numbers[index] == 0) {
                     return false;
                 }
@@ -71,9 +71,9 @@ NumberList.prototype = {
 
     // create a candidate list
     "createCandidates": function(deep, balls, height, count, length) {
-        var candidates = [];
-        var max = (this.length + length) * balls;
-        var min = max - length * height;
+        const candidates = [];
+        const max = (this.length + length) * balls;
+        const min = max - length * height;
         if (this._sum < min || max < this._sum) {
             // return if the value is already too large or too small
             return candidates;
@@ -81,19 +81,19 @@ NumberList.prototype = {
 
         // initialize properties
         this.indexes = new Array(length);
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             this.indexes[i] = 0;
         }
         this.depth = 1;
 
         // create up to the specified number
         while (candidates.length < count && this.depth <= length) {
-            var addition = this.indexes.slice(0, this.depth);
-            var total = addition.reduce(this._addNumber, this._sum);
+            const addition = this.indexes.slice(0, this.depth);
+            const total = addition.reduce(this._addNumber, this._sum);
 
             // judgement
             if (total == (this.length + this.depth) * balls) {
-                var next = new NumberList(this.numbers.concat(addition));
+                const next = new NumberList(this.numbers.concat(addition));
                 if (next.isSiteswap()) {
                     candidates.push(next.toString());
                 }
@@ -133,7 +133,7 @@ NumberList.prototype = {
         }
 
         // when the maximum depth is reached
-        var i = this.depth - 1;
+        let i = this.depth - 1;
         this.indexes[i]++;
         while (height < this.indexes[i]) {
             this.indexes[i] = 0;
@@ -151,7 +151,7 @@ NumberList.prototype = {
     // breadth-first search
     "_setNextByBreadth": function(height) {
         // update index from current depth
-        var i = this.depth - 1;
+        let i = this.depth - 1;
         this.indexes[i]++;
         while (height < this.indexes[i]) {
             this.indexes[i] = 0;
@@ -168,7 +168,7 @@ NumberList.prototype = {
 }
 
 // Controller class
-var Controller = function() {
+const Controller = function() {
     // fields
     this._prev = "";
     this._elements = [];
@@ -183,7 +183,7 @@ Controller.prototype = {
 
     // initialize the private fields
     "_initialize": function() {
-        var input = document.getElementById("pattern");
+        const input = document.getElementById("pattern");
         this._prev = input.value;
 
         // events
@@ -201,7 +201,7 @@ Controller.prototype = {
         this._clearFrame();
 
         // JuggleMaster
-        var board = document.getElementById("board");
+        const board = document.getElementById("board");
         board.width = board.clientWidth;
         board.height = board.width;
         this._jmj = new Jmj({ "canvas": board });
@@ -241,33 +241,33 @@ Controller.prototype = {
     // pattern input process
     "_inputPattern": function(e) {
         // check the input
-        var input = e.currentTarget;
-        var pattern = input.value.trim();
+        const input = e.currentTarget;
+        const pattern = input.value.trim();
         if (pattern == this._prev) {
             return;
         }
-        var numbers = this._viewData(input);
+        const numbers = this._viewData(input);
         if (numbers == null) {
             return;
         }
 
         // create a candidate list
-        var balls = this._getValidInt(document.getElementById("balls").value, 1, 35);
-        var height = this._getValidInt(document.getElementById("height").value, balls, 35);
-        var count = this._getValidInt(document.getElementById("count").value, 5, 100);
-        var length = this._getValidInt(document.getElementById("length").value, 1, 5);
-        var deep = document.getElementById("depth").checked;
-        var candidates = numbers.createCandidates(deep, balls, height, count, length);
+        const balls = this._getValidInt(document.getElementById("balls").value, 1, 35);
+        const height = this._getValidInt(document.getElementById("height").value, balls, 35);
+        const count = this._getValidInt(document.getElementById("count").value, 5, 100);
+        const length = this._getValidInt(document.getElementById("length").value, 1, 5);
+        const deep = document.getElementById("depth").checked;
+        const candidates = numbers.createCandidates(deep, balls, height, count, length);
         if (candidates.length == 0) {
             return;
         }
         this._elements = new Array(candidates.length);
 
         // create elements one by one
-        var suggest = document.getElementById("suggest");
+        const suggest = document.getElementById("suggest");
         suggest.style.display = "";
-        for (var i = 0; i < candidates.length; i++) {
-            var element = document.createElement("div");
+        for (let i = 0; i < candidates.length; i++) {
+            const element = document.createElement("div");
             element.innerHTML = candidates[i];
 
             // set events for each element
@@ -298,7 +298,7 @@ Controller.prototype = {
         }
 
         // select next element
-        var element = this._elements[this._position];
+        const element = this._elements[this._position];
         element.className = "select";
     },
 
@@ -320,7 +320,7 @@ Controller.prototype = {
         input.className = "";
 
         // get the data
-        var numbers = new NumberList(input.value);
+        const numbers = new NumberList(input.value);
         if (numbers.length == 0) {
             return null;
         }
@@ -339,7 +339,7 @@ Controller.prototype = {
     // clear the list of complementary elements
     "_clearFrame": function() {
         // clear the elements
-        var suggest = document.getElementById("suggest");
+        const suggest = document.getElementById("suggest");
         suggest.innerHTML = "";
         suggest.style.display = "none";
 
@@ -357,7 +357,7 @@ Controller.prototype = {
     // point the element
     "_pointElement": function(e) {
         // get the position after moving
-        var index = this._elements.indexOf(e.currentTarget);
+        const index = this._elements.indexOf(e.currentTarget);
         if (index == this._position) {
             return;
         }
@@ -369,8 +369,8 @@ Controller.prototype = {
     // start button process
     "_startJuggle": function(e) {
         // check the arguments
-        var input = document.getElementById("pattern");
-        var numbers = new NumberList(input.value);
+        const input = document.getElementById("pattern");
+        const numbers = new NumberList(input.value);
         if (!numbers.isSiteswap()) {
             return;
         }
@@ -384,8 +384,8 @@ Controller.prototype = {
         this._jmj.stopJuggling();
 
         // clear canvas
-        var board = document.getElementById("board");
-        var context = board.getContext("2d");
+        const board = document.getElementById("board");
+        const context = board.getContext("2d");
         context.clearRect(0, 0, board.width, board.height);
     },
 
@@ -393,7 +393,7 @@ Controller.prototype = {
     "_changeBalls": function(e) {
         // number of balls
         this._setStatus(e.currentTarget, 1, 35);
-        var min = this._getValidInt(e.currentTarget.value, 1, 35);
+        const min = this._getValidInt(e.currentTarget.value, 1, 35);
 
         // maximum height
         this._setStatus(document.getElementById("height"), min, 35);
@@ -402,8 +402,8 @@ Controller.prototype = {
     // maximum height changing process
     "_changeHeight": function(e) {
         // number of balls
-        var balls = document.getElementById("balls");
-        var min = this._getValidInt(balls.value, 1, 35);
+        const balls = document.getElementById("balls");
+        const min = this._getValidInt(balls.value, 1, 35);
 
         // maximum height
         this._setStatus(e.currentTarget, min, 35);
@@ -421,7 +421,7 @@ Controller.prototype = {
 
     // set the text box status
     "_setStatus": function(input, min, max) {
-        var number = parseInt(input.value, 10);
+        const number = parseInt(input.value, 10);
         if (isNaN(number) || number < min || max < number) {
             // invalid
             input.className = "error";
@@ -433,7 +433,7 @@ Controller.prototype = {
 
     // get valid integer value
     "_getValidInt": function(text, min, max) {
-        var number = parseInt(text, 10);
+        const number = parseInt(text, 10);
         if (isNaN(number)) {
             return min;
         } else {
@@ -443,7 +443,7 @@ Controller.prototype = {
 
     // move focus
     "_focusText": function() {
-        var input = document.getElementById("pattern");
+        const input = document.getElementById("pattern");
         input.focus();
     },
 

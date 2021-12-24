@@ -1,14 +1,14 @@
 // Number list class
-var NumberList = function(pattern) {
+const NumberList = function(pattern) {
     // check the arguments
     if (Array.isArray(pattern)) {
         this.numbers = pattern;
     } else {
         // convert string to number
-        var numbers = [];
-        var lower = pattern.toLowerCase();
-        for (var i = 0; i < lower.length; i++) {
-            var number = this.ALPHABET.indexOf(lower[i]);
+        const numbers = [];
+        const lower = pattern.toLowerCase();
+        for (let i = 0; i < lower.length; i++) {
+            const number = this.ALPHABET.indexOf(lower[i]);
             if (0 <= number) {
                 numbers.push(number);
             }
@@ -34,9 +34,9 @@ NumberList.prototype = {
     // whether valid siteswap or not
     "isSiteswap": function() {
         // check the numbers one by one
-        var drops = new Array(this.length);
-        for (var i = 0; i < this.length; i++) {
-            var index = (this.numbers[i] + i) % this.length;
+        const drops = new Array(this.length);
+        for (let i = 0; i < this.length; i++) {
+            const index = (this.numbers[i] + i) % this.length;
             if (drops[index]) {
                 return false;
             }
@@ -48,11 +48,11 @@ NumberList.prototype = {
     // whether jugglable or not
     "isJugglable": function() {
         // are all the dropping points apart?
-        var drops = {};
-        for (var i = 0; i < this.length; i++) {
+        const drops = {};
+        for (let i = 0; i < this.length; i++) {
             if (this.numbers[i] != 0) {
                 // judge only when throwing the ball
-                var index = this.numbers[i] + i;
+                const index = this.numbers[i] + i;
                 if (index < this.length && this.numbers[index] == 0) {
                     return false;
                 }
@@ -68,25 +68,25 @@ NumberList.prototype = {
     // create a candidate list
     "createCandidates": function(count, length) {
         // initialize
-        var candidates = [];
-        var indexes = new Array(length);
-        for (var i = 0; i < length; i++) {
+        const candidates = [];
+        const indexes = new Array(length);
+        for (let i = 0; i < length; i++) {
             indexes[i] = 0;
         }
-        var depth = 1;
-        var height = this.ALPHABET.length - 1;
+        const height = this.ALPHABET.length - 1;
+        let depth = 1;
 
         // create in order
         while (candidates.length < count && depth <= length) {
             // judgement
-            var pattern = this.numbers.concat(indexes.slice(0, depth));
-            var next = new NumberList(pattern);
+            const pattern = this.numbers.concat(indexes.slice(0, depth));
+            const next = new NumberList(pattern);
             if (next.isSiteswap()) {
                 candidates.push(next.toString());
             }
 
             // next index
-            var i = depth - 1;
+            let i = depth - 1;
             indexes[i]++;
             while (height < indexes[i]) {
                 indexes[i] = 0;
@@ -120,7 +120,7 @@ NumberList.prototype = {
 }
 
 // Controller class
-var Controller = function() {
+const Controller = function() {
     // fields
     this._prev = "";
     this._elements = [];
@@ -135,7 +135,7 @@ Controller.prototype = {
 
     // initialize the private fields
     "_initialize": function() {
-        var input = document.getElementById("pattern");
+        const input = document.getElementById("pattern");
         this._prev = input.value;
 
         // events
@@ -181,27 +181,27 @@ Controller.prototype = {
     // pattern input process
     "_inputPattern": function(e) {
         // check the input
-        var input = e.currentTarget;
+        const input = e.currentTarget;
         if (input.value.trim() == this._prev) {
             return;
         }
-        var numbers = this._viewData(input);
+        const numbers = this._viewData(input);
         if (numbers == null) {
             return;
         }
 
         // create a candidate list
-        var candidates = numbers.createCandidates(10, 3);
+        const candidates = numbers.createCandidates(10, 3);
         if (candidates.length == 0) {
             return;
         }
         this._elements = new Array(candidates.length);
 
         // create elements one by one
-        var suggest = document.getElementById("suggest");
+        const suggest = document.getElementById("suggest");
         suggest.style.display = "";
-        for (var i = 0; i < candidates.length; i++) {
-            var element = document.createElement("div");
+        for (let i = 0; i < candidates.length; i++) {
+            const element = document.createElement("div");
             element.innerHTML = candidates[i];
 
             // set events for each element
@@ -232,7 +232,7 @@ Controller.prototype = {
         }
 
         // select next element
-        var element = this._elements[this._position];
+        const element = this._elements[this._position];
         element.className = "select";
     },
 
@@ -254,7 +254,7 @@ Controller.prototype = {
         input.className = "";
 
         // get the data
-        var numbers = new NumberList(input.value);
+        const numbers = new NumberList(input.value);
         document.getElementById("balls").innerHTML = numbers.balls;
         if (numbers.length == 0) {
             return null;
@@ -274,7 +274,7 @@ Controller.prototype = {
     // clear the list of complementary elements
     "_clearFrame": function() {
         // clear the elements
-        var suggest = document.getElementById("suggest");
+        const suggest = document.getElementById("suggest");
         suggest.innerHTML = "";
         suggest.style.display = "none";
 
@@ -292,7 +292,7 @@ Controller.prototype = {
     // point the element
     "_pointElement": function(e) {
         // get the position after moving
-        var index = this._elements.indexOf(e.currentTarget);
+        const index = this._elements.indexOf(e.currentTarget);
         if (index == this._position) {
             return;
         }
@@ -303,7 +303,7 @@ Controller.prototype = {
 
     // move focus
     "_focusText": function() {
-        var input = document.getElementById("pattern");
+        const input = document.getElementById("pattern");
         input.focus();
     },
 
