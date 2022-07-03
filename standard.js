@@ -214,24 +214,33 @@ Controller.prototype = {
         }
 
         // process for each key
-        if (e.keyCode == 38) {
-            // up
-            this._moveElement(this._position - 1);
-        } else if (e.keyCode == 40) {
-            // down
-            this._moveElement(this._position + 1);
-        } else if (e.keyCode == 13) {
-            // Enter
-            if (0 <= this._position && this._position < this._elements.length) {
-                this._selectElement(e.currentTarget, this._elements[this._position].innerHTML);
-            } else {
+        switch (e.keyCode) {
+            case 38:
+                // up
+                this._moveElement(this._position - 1);
+                break;
+
+            case 40:
+                // down
+                this._moveElement(this._position + 1);
+                break;
+
+            case 13:
+                // Enter
+                if (0 <= this._position && this._position < this._elements.length) {
+                    this._selectElement(e.currentTarget, this._elements[this._position].innerHTML);
+                } else {
+                    this._clearFrame();
+                }
+                break;
+
+            case 27:
+                // ESC
                 this._clearFrame();
-            }
-        } else if (e.keyCode == 27) {
-            // ESC
-            this._clearFrame();
-        } else {
-            return;
+                break;
+
+            default:
+                return;
         }
 
         // cancel default processing
