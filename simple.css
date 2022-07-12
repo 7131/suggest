@@ -4,6 +4,10 @@ nav span {
     margin-right: 1ex;
 }
 
+article {
+    line-height: 1.5;
+}
+
 input {
     width: 90%;
 }
