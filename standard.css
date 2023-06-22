@@ -21,10 +21,11 @@ input[type="radio"] {
     width: auto;
 }
 
-canvas {
+svg {
     margin: 2ex 0ex 0ex 0ex;
     border: 1px solid gray;
     width: 90%;
+    height: 90%;
 }
 
 section.box {
@@ -77,8 +78,9 @@ section.box {
         width: auto;
     }
 
-    canvas {
+    svg {
         width: 300px;
+        height: 300px;
     }
 
     section.box {

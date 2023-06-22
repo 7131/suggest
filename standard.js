@@ -182,11 +182,9 @@ const Controller = function() {
 Controller.prototype = {
 
     // initialize the private fields
-    "_initialize": function() {
-        const input = document.getElementById("pattern");
-        this._prev = input.value;
-
+    "_initialize": function(e) {
         // events
+        const input = document.getElementById("pattern");
         input.addEventListener("keydown", this._selectPattern.bind(this), false);
         input.addEventListener("input", this._inputPattern.bind(this), false);
         input.addEventListener("blur", this._clearFrame.bind(this), false);
@@ -199,12 +197,7 @@ Controller.prototype = {
 
         // clear the list
         this._clearFrame();
-
-        // JuggleMaster
-        const board = document.getElementById("board");
-        board.width = board.clientWidth;
-        board.height = board.width;
-        this._jmj = new Jmj({ "canvas": board });
+        this._facade = new jmotion.Facade(document.getElementById("board"));
     },
 
     // pattern selection process by keyboard
@@ -377,25 +370,13 @@ Controller.prototype = {
 
     // start button process
     "_startJuggle": function(e) {
-        // check the arguments
         const input = document.getElementById("pattern");
-        const numbers = new NumberList(input.value);
-        if (!numbers.isSiteswap()) {
-            return;
-        }
-
-        // start
-        this._jmj.startJuggling({ "siteswap": numbers.toString(), "showSiteswap": false });
+        this._facade.startJuggling(input.value);
     },
 
     // stop button process
     "_stopJuggle": function(e) {
-        this._jmj.stopJuggling();
-
-        // clear canvas
-        const board = document.getElementById("board");
-        const context = board.getContext("2d");
-        context.clearRect(0, 0, board.width, board.height);
+        this._facade.stopJuggling();
     },
 
     // the number of balls changing process

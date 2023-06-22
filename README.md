@@ -1,7 +1,7 @@
 # Siteswap Suggestion Service
 
 This service suggests valid siteswaps by complimenting the numbers for the input pattern.
-The generated siteswaps can also be demonstrated with JuggleMaster.
+The generated siteswaps can also be demonstrated with a juggling simulator.
 
 # File list
 
