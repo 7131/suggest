@@ -5,12 +5,12 @@ nav span {
 }
 
 article {
-    line-height: 1.5;
+    line-height: 1.8;
     margin-bottom: 10ex;
 }
 
 #pattern {
-    width: 90%;
+    width: 90vw;
     color: black;
     background-color: white;
 }
@@ -39,7 +39,7 @@ table tr td {
 }
 
 .area {
-    height: 30ex;
+    height: 35ex;
 }
 
 .number {
@@ -66,8 +66,16 @@ table tr td {
 
 @media (min-width: 768px) {
 
+    article {
+        line-height: 1.5;
+    }
+
     #pattern {
         width: 50ex;
+    }
+
+    .area {
+        height: 30ex;
     }
 
 }

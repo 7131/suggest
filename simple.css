@@ -5,11 +5,11 @@ nav span {
 }
 
 article {
-    line-height: 1.5;
+    line-height: 1.8;
 }
 
 input {
-    width: 90%;
+    width: 90vw;
 }
 
 .table .row {
@@ -43,6 +43,10 @@ input {
 }
 
 @media (min-width: 768px) {
+
+    article {
+        line-height: 1.5;
+    }
 
     #pattern {
         width: 50ex;

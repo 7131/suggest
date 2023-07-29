@@ -5,12 +5,12 @@ nav span {
 }
 
 article {
-    line-height: 1.5;
+    line-height: 1.8;
     margin-bottom: 10ex;
 }
 
 input {
-    width: 90%;
+    width: 90vw;
 }
 
 input[type="radio"] {
@@ -19,14 +19,14 @@ input[type="radio"] {
 
 button {
     margin-top: 2ex;
-    width: 90%;
+    width: 90vw;
 }
 
 svg {
     margin: 2ex 0ex 0ex 0ex;
     border: 1px solid gray;
-    width: 90%;
-    height: 90%;
+    width: 90vw;
+    height: 90vw;
 }
 
 section.box {
@@ -68,48 +68,69 @@ section.box {
     background-color: dodgerblue;
 }
 
-@media (min-width: 768px) {
+@media (orientation: landscape) {
 
-    #pattern {
-        width: 50ex;
+    article {
+        line-height: 1.5;
+    }
+
+    input {
+        width: 90vh;
     }
 
     button {
-        margin-top: 0ex;
-        width: auto;
+        width: 90vh;
     }
 
     svg {
-        width: 300px;
-        height: 300px;
+        width: 90vh;
+        height: 90vh;
     }
 
-    section.box {
-        margin: 3ex 0ex;
-        border: 1px solid gray;
-        padding: 2ex;
-    }
+    @media (min-width: 768px) {
 
-    section.box h2 {
-        margin: 0ex;
-    }
+        #pattern {
+            width: 50ex;
+        }
 
-    section.box input[type="number"] {
-        width: 10ex;
-    }
+        button {
+            margin-top: 0ex;
+            width: auto;
+        }
 
-    .table {
-        display: table;
-    }
+        svg {
+            width: 300px;
+            height: 300px;
+        }
 
-    .table .row {
-        display: table-row;
-    }
+        section.box {
+            margin: 3ex 0ex;
+            border: 1px solid gray;
+            padding: 2ex;
+        }
 
-    .table .row .cell {
-        display: table-cell;
-        padding: 0.5ex 1ex;
-        vertical-align: middle;
+        section.box h2 {
+            margin: 0ex;
+        }
+
+        section.box input[type="number"] {
+            width: 10ex;
+        }
+
+        .table {
+            display: table;
+        }
+
+        .table .row {
+            display: table-row;
+        }
+
+        .table .row .cell {
+            display: table-cell;
+            padding: 0.5ex 1ex;
+            vertical-align: middle;
+        }
+
     }
 
 }
