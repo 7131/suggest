@@ -6,9 +6,8 @@ const NumberList = function(pattern) {
     } else {
         // convert string to number
         const numbers = [];
-        const lower = pattern.toLowerCase();
-        for (let i = 0; i < lower.length; i++) {
-            const number = this.ALPHABET.indexOf(lower[i]);
+        for (const letter of pattern.toLowerCase()) {
+            const number = this.ALPHABET.indexOf(letter);
             if (0 <= number) {
                 numbers.push(number);
             }
