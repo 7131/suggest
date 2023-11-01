@@ -1,18 +1,22 @@
 // Number list class
 const NumberList = function(pattern) {
     // check the arguments
+    this.numbers = [];
     if (Array.isArray(pattern)) {
-        this.numbers = pattern;
+        // for an array
+        for (const number of pattern) {
+            if (!isNaN(number) && 0 <= number) {
+                this.numbers.push(number);
+            }
+        }
     } else {
         // convert string to number
-        const numbers = [];
         for (const letter of pattern.toLowerCase()) {
             const number = this.ALPHABET.indexOf(letter);
             if (0 <= number) {
-                numbers.push(number);
+                this.numbers.push(number);
             }
         }
-        this.numbers = numbers;
     }
 
     // set properties
