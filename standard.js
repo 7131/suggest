@@ -197,7 +197,7 @@ Controller.prototype = {
 
         // clear the list
         this._clearFrame();
-        this._facade = new jmotion.Facade(document.getElementById("board"));
+        this._facade = new jmotion.Facade("#board");
     },
 
     // pattern selection process by keyboard
