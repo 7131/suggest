@@ -175,7 +175,7 @@ const Controller = function() {
     this._position = -1;
 
     // events
-    window.addEventListener("load", this._initialize.bind(this), false);
+    window.addEventListener("load", this._initialize.bind(this));
 }
 
 // Controller prototype
@@ -185,15 +185,15 @@ Controller.prototype = {
     "_initialize": function(e) {
         // events
         const input = document.getElementById("pattern");
-        input.addEventListener("keydown", this._selectPattern.bind(this), false);
-        input.addEventListener("input", this._inputPattern.bind(this), false);
-        input.addEventListener("blur", this._clearFrame.bind(this), false);
-        document.getElementById("start").addEventListener("click", this._startJuggle.bind(this), false);
-        document.getElementById("stop").addEventListener("click", this._stopJuggle.bind(this), false);
-        document.getElementById("balls").addEventListener("input", this._changeBalls.bind(this), false);
-        document.getElementById("height").addEventListener("input", this._changeHeight.bind(this), false);
-        document.getElementById("count").addEventListener("input", this._changeCount.bind(this), false);
-        document.getElementById("length").addEventListener("input", this._changeLength.bind(this), false);
+        input.addEventListener("keydown", this._selectPattern.bind(this));
+        input.addEventListener("input", this._inputPattern.bind(this));
+        input.addEventListener("blur", this._clearFrame.bind(this));
+        document.getElementById("start").addEventListener("click", this._startJuggle.bind(this));
+        document.getElementById("stop").addEventListener("click", this._stopJuggle.bind(this));
+        document.getElementById("balls").addEventListener("input", this._changeBalls.bind(this));
+        document.getElementById("height").addEventListener("input", this._changeHeight.bind(this));
+        document.getElementById("count").addEventListener("input", this._changeCount.bind(this));
+        document.getElementById("length").addEventListener("input", this._changeLength.bind(this));
 
         // clear the list
         this._clearFrame();
@@ -273,9 +273,9 @@ Controller.prototype = {
             element.innerHTML = candidates[i];
 
             // set events for each element
-            element.addEventListener("touchstart", this._tapElement.bind(this), false);
-            element.addEventListener("mousedown", this._tapElement.bind(this), false);
-            element.addEventListener("mouseover", this._pointElement.bind(this), false);
+            element.addEventListener("touchstart", this._tapElement.bind(this));
+            element.addEventListener("mousedown", this._tapElement.bind(this));
+            element.addEventListener("mouseover", this._pointElement.bind(this));
             this._elements[i] = element;
             suggest.appendChild(element);
         }
@@ -339,7 +339,7 @@ Controller.prototype = {
     },
 
     // clear the list of complementary elements
-    "_clearFrame": function() {
+    "_clearFrame": function(e) {
         // clear the elements
         const suggest = document.getElementById("suggest");
         suggest.innerHTML = "";

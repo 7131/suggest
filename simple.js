@@ -130,21 +130,21 @@ const Controller = function() {
     this._position = -1;
 
     // events
-    window.addEventListener("load", this._initialize.bind(this), false);
+    window.addEventListener("load", this._initialize.bind(this));
 }
 
 // Controller prototype
 Controller.prototype = {
 
     // initialize the private fields
-    "_initialize": function() {
+    "_initialize": function(e) {
         const input = document.getElementById("pattern");
         this._prev = input.value;
 
         // events
-        input.addEventListener("keydown", this._selectPattern.bind(this), false);
-        input.addEventListener("input", this._inputPattern.bind(this), false);
-        input.addEventListener("blur", this._clearFrame.bind(this), false);
+        input.addEventListener("keydown", this._selectPattern.bind(this));
+        input.addEventListener("input", this._inputPattern.bind(this));
+        input.addEventListener("blur", this._clearFrame.bind(this));
 
         // clear the list
         this._clearFrame();
@@ -217,9 +217,9 @@ Controller.prototype = {
             element.innerHTML = candidates[i];
 
             // set events for each element
-            element.addEventListener("touchstart", this._tapElement.bind(this), false);
-            element.addEventListener("mousedown", this._tapElement.bind(this), false);
-            element.addEventListener("mouseover", this._pointElement.bind(this), false);
+            element.addEventListener("touchstart", this._tapElement.bind(this));
+            element.addEventListener("mousedown", this._tapElement.bind(this));
+            element.addEventListener("mouseover", this._pointElement.bind(this));
             this._elements[i] = element;
             suggest.appendChild(element);
         }
@@ -284,7 +284,7 @@ Controller.prototype = {
     },
 
     // clear the list of complementary elements
-    "_clearFrame": function() {
+    "_clearFrame": function(e) {
         // clear the elements
         const suggest = document.getElementById("suggest");
         suggest.innerHTML = "";
