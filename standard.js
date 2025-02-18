@@ -285,7 +285,7 @@ Controller.prototype = {
     "_moveElement": function(index) {
         // clear current selection
         if (0 <= this._position && this._position < this._elements.length) {
-            this._elements[this._position].className = "";
+            this._elements[this._position].classList.remove("select");
         }
         if (index < -1) {
             // move to the end
@@ -301,7 +301,7 @@ Controller.prototype = {
 
         // select next element
         const element = this._elements[this._position];
-        element.className = "select";
+        element.classList.add("select");
     },
 
     // select element
@@ -319,7 +319,8 @@ Controller.prototype = {
         // clear the list
         this._clearFrame();
         this._prev = input.value;
-        input.className = "";
+        input.classList.remove("error");
+        input.classList.remove("valid");
 
         // get the data
         const numbers = new NumberList(input.value);
@@ -328,12 +329,12 @@ Controller.prototype = {
         }
         if (!numbers.isJugglable()) {
             // not jugglable
-            input.className = "error";
+            input.classList.add("error");
             return null;
         }
         if (numbers.isSiteswap()) {
             // valid siteswap
-            input.className = "valid";
+            input.classList.add("valid");
         }
         return numbers;
     },
@@ -415,10 +416,10 @@ Controller.prototype = {
         const number = parseInt(input.value, 10);
         if (isNaN(number) || number < min || max < number) {
             // invalid
-            input.className = "error";
+            input.classList.add("error");
         } else {
             // valid
-            input.className = "";
+            input.classList.remove("error");
         }
     },
 

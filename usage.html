@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" type="text/css" href="./usage.css">
-
 <title>Siteswap Suggestion Service</title>
 </head>
 
@@ -18,13 +17,10 @@
 
 <article>
 <h1>How to use the service</h1>
-<div>
 <p>When you enter a number or alphabet, this service suggests a valid siteswap that starts with that number (or alphabet). Only vanilla siteswaps that don't include multiplex or synchronous are displayed.</p>
-</div>
 
 <section>
 <h2>Standard version</h2>
-<div>
 <p>Siteswap candidates will be displayed according to the settings.</p>
 <div class="area">
   <input type="text" id="pattern" value="23" disabled="disabled">
@@ -47,12 +43,10 @@
 <p>If you increase the maximum number of candidates, more candidates will be displayed. The minimum value is 5 and the maximum value is 100.</p>
 <p>If you increase the maximum complement length, longer siteswaps will be displayed. The minimum value is 1 and the maximum value is 5.</p>
 <p>There are breadth-first search and depth-first search. When you enter 4 on 3 balls, for example, the breadth-first search will list the candidates in order of pattern length as 42, 414, 423, .... While depth-first search will list such as 4044, 4053, 4134, .... They are displayed in the order of the leftmost number, the second number, the third number, and so on. The default is breadth-first search.</p>
-</div>
 </section>
 
 <section>
 <h2>Simplified version</h2>
-<div>
 <p>Unlike the standard version, there are no setting items, and a list of valid siteswaps is displayed regardless of the number of balls. The number of balls is displayed in real time above the pattern input field. This doesn't necessarily become an integer because it is displayed the value calculated mechanically for the pattern in the current input field.</p>
 <p>The setting items other than the number of balls are fixed to the following values.</p>
 <table>
@@ -63,7 +57,6 @@
   <tr><td>Search priority direction</td><td>Breadth</td></tr>
 </table>
 <p>The standard version is a service that searches for practical siteswaps, while the simplified version was developed to search for words.</p>
-</div>
 </section>
 
 </article>
