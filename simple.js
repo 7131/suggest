@@ -1,43 +1,27 @@
 // Number list class
 const NumberList = function(pattern) {
     // check the arguments
-    this.numbers = [];
-    if (Array.isArray(pattern)) {
-        // for an array
-        for (const number of pattern) {
-            if (!isNaN(number) && 0 <= number) {
-                this.numbers.push(number);
-            }
-        }
-    } else {
-        // convert string to number
-        for (const letter of pattern.toLowerCase()) {
-            const number = this.ALPHABET.indexOf(letter);
-            if (0 <= number) {
-                this.numbers.push(number);
-            }
-        }
+    if (!Array.isArray(pattern)) {
+        pattern = pattern.split("").map(elem => parseInt(elem, 36));
     }
+    this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
 
     // set properties
     this.length = this.numbers.length;
     if (this.length == 0) {
         this.balls = "&nbsp;";
     } else {
-        this.balls = this.numbers.reduce(this._addNumber, 0) / this.length;
+        this.balls = this.numbers.reduce((acc, cur) => acc + cur) / this.length;
     }
 }
 
 // Number list prototype
 NumberList.prototype = {
 
-    // siteswap alphabets
-    "ALPHABET": "0123456789abcdefghijklmnopqrstuvwxyz",
-
     // whether valid siteswap or not
     "isSiteswap": function() {
         // check the numbers one by one
-        const drops = new Array(this.length);
+        const drops = new Array(this.length).fill(false);
         for (let i = 0; i < this.length; i++) {
             const index = (this.numbers[i] + i) % this.length;
             if (drops[index]) {
@@ -51,9 +35,9 @@ NumberList.prototype = {
     // whether jugglable or not
     "isJugglable": function() {
         // are all the dropping points apart?
-        const drops = {};
+        const drops = [];
         for (let i = 0; i < this.length; i++) {
-            if (this.numbers[i] != 0) {
+            if (0 < this.numbers[i]) {
                 // judge only when throwing the ball
                 const index = this.numbers[i] + i;
                 if (index < this.length && this.numbers[index] == 0) {
@@ -72,18 +56,13 @@ NumberList.prototype = {
     "createCandidates": function(count, length) {
         // initialize
         const candidates = [];
-        const indexes = new Array(length);
-        for (let i = 0; i < length; i++) {
-            indexes[i] = 0;
-        }
-        const height = this.ALPHABET.length - 1;
+        const indexes = new Array(length).fill(0);
         let depth = 1;
 
         // create in order
         while (candidates.length < count && depth <= length) {
             // judgement
-            const pattern = this.numbers.concat(indexes.slice(0, depth));
-            const next = new NumberList(pattern);
+            const next = new NumberList(this.numbers.concat(indexes.slice(0, depth)));
             if (next.isSiteswap()) {
                 candidates.push(next.toString());
             }
@@ -91,7 +70,7 @@ NumberList.prototype = {
             // next index
             let i = depth - 1;
             indexes[i]++;
-            while (height < indexes[i]) {
+            while (35 < indexes[i]) {
                 indexes[i] = 0;
                 i--;
                 if (i < 0) {
@@ -107,29 +86,13 @@ NumberList.prototype = {
 
     // get instance string
     "toString": function() {
-        return this.numbers.reduce(this._joinChar.bind(this), "");
-    },
-
-    // add number
-    "_addNumber": function(prev, curr) {
-        return prev + curr;
-    },
-
-    // concatenation of character
-    "_joinChar": function(prev, curr) {
-        return prev + this.ALPHABET[curr];
+        return this.numbers.reduce((acc, cur) => acc + cur.toString(36), "");
     },
 
 }
 
 // Controller class
 const Controller = function() {
-    // fields
-    this._prev = "";
-    this._elements = [];
-    this._position = -1;
-
-    // events
     window.addEventListener("load", this._initialize.bind(this));
 }
 
@@ -138,15 +101,16 @@ Controller.prototype = {
 
     // initialize the private fields
     "_initialize": function(e) {
-        const input = document.getElementById("pattern");
-        this._prev = input.value;
-
         // events
+        const input = document.getElementById("pattern");
         input.addEventListener("keydown", this._selectPattern.bind(this));
         input.addEventListener("input", this._inputPattern.bind(this));
         input.addEventListener("blur", this._clearFrame.bind(this));
 
-        // clear the list
+        // fields
+        this._prev = input.value;
+        this._elements = [];
+        this._position = -1;
         this._clearFrame();
     },
 
@@ -207,20 +171,20 @@ Controller.prototype = {
         if (candidates.length == 0) {
             return;
         }
-        this._elements = new Array(candidates.length);
+        this._elements = [];
 
         // create elements one by one
         const suggest = document.getElementById("suggest");
         suggest.style.display = "";
-        for (let i = 0; i < candidates.length; i++) {
+        for (const candidate of candidates) {
             const element = document.createElement("div");
-            element.innerHTML = candidates[i];
+            element.innerHTML = candidate;
 
             // set events for each element
             element.addEventListener("touchstart", this._tapElement.bind(this));
             element.addEventListener("mousedown", this._tapElement.bind(this));
             element.addEventListener("mouseover", this._pointElement.bind(this));
-            this._elements[i] = element;
+            this._elements.push(element);
             suggest.appendChild(element);
         }
     },
@@ -316,8 +280,7 @@ Controller.prototype = {
 
     // move focus
     "_focusText": function() {
-        const input = document.getElementById("pattern");
-        input.focus();
+        document.getElementById("pattern").focus();
     },
 
 }
