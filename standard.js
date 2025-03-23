@@ -70,7 +70,7 @@ NumberList.prototype = {
         // create up to the specified number
         while (candidates.length < count && this.depth <= length) {
             const addition = this.indexes.slice(0, this.depth);
-            const total = addition.reduce((acc, cur) => acc + cur, this._sum);
+            const total = this._sum + addition.reduce((acc, cur) => acc + cur);
 
             // judgement
             if (total == (this.length + this.depth) * balls) {
