@@ -8,7 +8,11 @@ const NumberList = function(pattern) {
 
     // set properties
     this.length = this.numbers.length;
-    this._sum = this.numbers.reduce((acc, cur) => acc + cur);
+    if (this.length == 0) {
+        this._sum = 0;
+    } else {
+        this._sum = this.numbers.reduce((acc, cur) => acc + cur);
+    }
 }
 
 // Number list prototype
