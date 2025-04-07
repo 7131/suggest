@@ -42,6 +42,10 @@ section.box {
     font-size: small;
 }
 
+.hidden {
+    display: none;
+}
+
 .valid {
     background-color: greenyellow;
 }

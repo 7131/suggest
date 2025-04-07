@@ -101,14 +101,18 @@ Controller.prototype = {
 
     // initialize the private fields
     "_initialize": function(e) {
+        // DOM elements
+        this._balls = document.getElementById("balls");
+        this._input = document.getElementById("pattern");
+        this._suggest = document.getElementById("suggest");
+
         // events
-        const input = document.getElementById("pattern");
-        input.addEventListener("keydown", this._selectPattern.bind(this));
-        input.addEventListener("input", this._inputPattern.bind(this));
-        input.addEventListener("blur", this._clearFrame.bind(this));
+        this._input.addEventListener("keydown", this._selectPattern.bind(this));
+        this._input.addEventListener("input", this._inputPattern.bind(this));
+        this._input.addEventListener("blur", this._clearFrame.bind(this));
 
         // fields
-        this._prev = input.value;
+        this._prev = this._input.value;
         this._elements = [];
         this._position = -1;
         this._clearFrame();
@@ -135,7 +139,7 @@ Controller.prototype = {
             case 13:
                 // Enter
                 if (0 <= this._position && this._position < this._elements.length) {
-                    this._selectElement(e.currentTarget, this._elements[this._position].innerHTML);
+                    this._selectElement(this._elements[this._position].innerHTML);
                 } else {
                     this._clearFrame();
                 }
@@ -157,11 +161,10 @@ Controller.prototype = {
     // pattern input process
     "_inputPattern": function(e) {
         // check the input
-        const input = e.currentTarget;
-        if (input.value.trim() == this._prev) {
+        if (this._input.value.trim() == this._prev) {
             return;
         }
-        const numbers = this._viewData(input);
+        const numbers = this._viewData();
         if (numbers == null) {
             return;
         }
@@ -174,8 +177,7 @@ Controller.prototype = {
         this._elements = [];
 
         // create elements one by one
-        const suggest = document.getElementById("suggest");
-        suggest.style.display = "";
+        this._suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
             element.innerHTML = candidate;
@@ -185,7 +187,7 @@ Controller.prototype = {
             element.addEventListener("mousedown", this._tapElement.bind(this));
             element.addEventListener("mouseover", this._pointElement.bind(this));
             this._elements.push(element);
-            suggest.appendChild(element);
+            this._suggest.appendChild(element);
         }
     },
 
@@ -213,37 +215,37 @@ Controller.prototype = {
     },
 
     // select element
-    "_selectElement": function(input, pattern) {
+    "_selectElement": function(pattern) {
         // set the text box property
-        input.value = pattern;
-        input.setSelectionRange(pattern.length, pattern.length);
+        this._input.value = pattern;
+        this._input.setSelectionRange(pattern.length, pattern.length);
 
         // display data
-        this._viewData(input);
+        this._viewData();
     },
 
     // display data
-    "_viewData": function(input) {
+    "_viewData": function() {
         // clear the list
         this._clearFrame();
-        this._prev = input.value;
-        input.classList.remove("error");
-        input.classList.remove("valid");
+        this._prev = this._input.value;
+        this._input.classList.remove("error");
+        this._input.classList.remove("valid");
 
         // get the data
-        const numbers = new NumberList(input.value);
-        document.getElementById("balls").innerHTML = numbers.balls;
+        const numbers = new NumberList(this._input.value);
+        this._balls.innerHTML = numbers.balls;
         if (numbers.length == 0) {
             return null;
         }
         if (!numbers.isJugglable()) {
             // not jugglable
-            input.classList.add("error");
+            this._input.classList.add("error");
             return null;
         }
         if (numbers.isSiteswap()) {
             // valid siteswap
-            input.classList.add("valid");
+            this._input.classList.add("valid");
         }
         return numbers;
     },
@@ -251,9 +253,8 @@ Controller.prototype = {
     // clear the list of complementary elements
     "_clearFrame": function(e) {
         // clear the elements
-        const suggest = document.getElementById("suggest");
-        suggest.innerHTML = "";
-        suggest.style.display = "none";
+        this._suggest.innerHTML = "";
+        this._suggest.classList.add("hidden");
 
         // clear the fields
         this._elements = [];
@@ -262,8 +263,8 @@ Controller.prototype = {
 
     // pattern selection process by tap
     "_tapElement": function(e) {
-        this._selectElement(document.getElementById("pattern"), e.currentTarget.innerHTML);
-        setTimeout(this._focusText, 100);
+        this._selectElement(e.currentTarget.innerHTML);
+        e.preventDefault();
     },
 
     // point the element
@@ -276,11 +277,6 @@ Controller.prototype = {
 
         // move element
         this._moveElement(index);
-    },
-
-    // move focus
-    "_focusText": function() {
-        document.getElementById("pattern").focus();
     },
 
 }

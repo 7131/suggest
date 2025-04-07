@@ -16,6 +16,10 @@ input {
     margin-top: 2ex;
 }
 
+.hidden {
+    display: none;
+}
+
 .valid {
     background-color: greenyellow;
 }

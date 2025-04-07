@@ -152,17 +152,25 @@ Controller.prototype = {
 
     // initialize the private fields
     "_initialize": function(e) {
+        // DOM elements
+        this._input = document.getElementById("pattern");
+        this._suggest = document.getElementById("suggest");
+        this._balls = document.getElementById("balls");
+        this._height = document.getElementById("height");
+        this._count = document.getElementById("count");
+        this._length = document.getElementById("length");
+        this._depth = document.getElementById("depth");
+
         // events
-        const input = document.getElementById("pattern");
-        input.addEventListener("keydown", this._selectPattern.bind(this));
-        input.addEventListener("input", this._inputPattern.bind(this));
-        input.addEventListener("blur", this._clearFrame.bind(this));
+        this._input.addEventListener("keydown", this._selectPattern.bind(this));
+        this._input.addEventListener("input", this._inputPattern.bind(this));
+        this._input.addEventListener("blur", this._clearFrame.bind(this));
+        this._balls.addEventListener("input", this._changeBalls.bind(this));
+        this._height.addEventListener("input", this._changeHeight.bind(this));
+        this._count.addEventListener("input", this._changeCount.bind(this));
+        this._length.addEventListener("input", this._changeLength.bind(this));
         document.getElementById("start").addEventListener("click", this._startJuggle.bind(this));
         document.getElementById("stop").addEventListener("click", this._stopJuggle.bind(this));
-        document.getElementById("balls").addEventListener("input", this._changeBalls.bind(this));
-        document.getElementById("height").addEventListener("input", this._changeHeight.bind(this));
-        document.getElementById("count").addEventListener("input", this._changeCount.bind(this));
-        document.getElementById("length").addEventListener("input", this._changeLength.bind(this));
 
         // clear the list
         this._prev = "";
@@ -193,7 +201,7 @@ Controller.prototype = {
             case 13:
                 // Enter
                 if (0 <= this._position && this._position < this._elements.length) {
-                    this._selectElement(e.currentTarget, this._elements[this._position].innerHTML);
+                    this._selectElement(this._elements[this._position].innerHTML);
                 } else {
                     this._clearFrame();
                 }
@@ -215,22 +223,21 @@ Controller.prototype = {
     // pattern input process
     "_inputPattern": function(e) {
         // check the input
-        const input = e.currentTarget;
-        const pattern = input.value.trim();
+        const pattern = this._input.value.trim();
         if (pattern == this._prev) {
             return;
         }
-        const numbers = this._viewData(input);
+        const numbers = this._viewData();
         if (numbers == null) {
             return;
         }
 
         // create a candidate list
-        const balls = this._getValidInt(document.getElementById("balls").value, 1, 35);
-        const height = this._getValidInt(document.getElementById("height").value, balls, 35);
-        const count = this._getValidInt(document.getElementById("count").value, 5, 100);
-        const length = this._getValidInt(document.getElementById("length").value, 1, 5);
-        const deep = document.getElementById("depth").checked;
+        const balls = this._getValidInt(this._balls.value, 1, 35);
+        const height = this._getValidInt(this._height.value, balls, 35);
+        const count = this._getValidInt(this._count.value, 5, 100);
+        const length = this._getValidInt(this._length.value, 1, 5);
+        const deep = this._depth.checked;
         const candidates = numbers.createCandidates(deep, balls, height, count, length);
         if (candidates.length == 0) {
             return;
@@ -238,8 +245,7 @@ Controller.prototype = {
         this._elements = [];
 
         // create elements one by one
-        const suggest = document.getElementById("suggest");
-        suggest.style.display = "";
+        this._suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
             element.innerHTML = candidate;
@@ -249,7 +255,7 @@ Controller.prototype = {
             element.addEventListener("mousedown", this._tapElement.bind(this));
             element.addEventListener("mouseover", this._pointElement.bind(this));
             this._elements.push(element);
-            suggest.appendChild(element);
+            this._suggest.appendChild(element);
         }
     },
 
@@ -277,36 +283,36 @@ Controller.prototype = {
     },
 
     // select element
-    "_selectElement": function(input, pattern) {
+    "_selectElement": function(pattern) {
         // set the text box property
-        input.value = pattern;
-        input.setSelectionRange(pattern.length, pattern.length);
+        this._input.value = pattern;
+        this._input.setSelectionRange(pattern.length, pattern.length);
 
         // display data
-        this._viewData(input);
+        this._viewData();
     },
 
     // display data
-    "_viewData": function(input) {
+    "_viewData": function() {
         // clear the list
         this._clearFrame();
-        this._prev = input.value;
-        input.classList.remove("error");
-        input.classList.remove("valid");
+        this._prev = this._input.value;
+        this._input.classList.remove("error");
+        this._input.classList.remove("valid");
 
         // get the data
-        const numbers = new NumberList(input.value);
+        const numbers = new NumberList(this._input.value);
         if (numbers.length == 0) {
             return null;
         }
         if (!numbers.isJugglable()) {
             // not jugglable
-            input.classList.add("error");
+            this._input.classList.add("error");
             return null;
         }
         if (numbers.isSiteswap()) {
             // valid siteswap
-            input.classList.add("valid");
+            this._input.classList.add("valid");
         }
         return numbers;
     },
@@ -314,9 +320,8 @@ Controller.prototype = {
     // clear the list of complementary elements
     "_clearFrame": function(e) {
         // clear the elements
-        const suggest = document.getElementById("suggest");
-        suggest.innerHTML = "";
-        suggest.style.display = "none";
+        this._suggest.innerHTML = "";
+        this._suggest.classList.add("hidden");
 
         // clear the fields
         this._elements = [];
@@ -325,8 +330,8 @@ Controller.prototype = {
 
     // pattern selection process by tap
     "_tapElement": function(e) {
-        this._selectElement(document.getElementById("pattern"), e.currentTarget.innerHTML);
-        setTimeout(this._focusText, 100);
+        this._selectElement(e.currentTarget.innerHTML);
+        e.preventDefault();
     },
 
     // point the element
@@ -343,8 +348,7 @@ Controller.prototype = {
 
     // start button process
     "_startJuggle": function(e) {
-        const input = document.getElementById("pattern");
-        const numbers = new NumberList(input.value);
+        const numbers = new NumberList(this._input.value);
         this._facade.startJuggling(numbers.toString());
     },
 
@@ -360,14 +364,13 @@ Controller.prototype = {
         const min = this._getValidInt(e.currentTarget.value, 1, 35);
 
         // maximum height
-        this._setStatus(document.getElementById("height"), min, 35);
+        this._setStatus(this._height, min, 35);
     },
 
     // maximum height changing process
     "_changeHeight": function(e) {
         // number of balls
-        const balls = document.getElementById("balls");
-        const min = this._getValidInt(balls.value, 1, 35);
+        const min = this._getValidInt(this._balls.value, 1, 35);
 
         // maximum height
         this._setStatus(e.currentTarget, min, 35);
@@ -384,14 +387,14 @@ Controller.prototype = {
     },
 
     // set the text box status
-    "_setStatus": function(input, min, max) {
-        const number = parseInt(input.value, 10);
+    "_setStatus": function(element, min, max) {
+        const number = parseInt(element.value, 10);
         if (isNaN(number) || number < min || max < number) {
             // invalid
-            input.classList.add("error");
+            element.classList.add("error");
         } else {
             // valid
-            input.classList.remove("error");
+            element.classList.remove("error");
         }
     },
 
@@ -403,11 +406,6 @@ Controller.prototype = {
         } else {
             return Math.max(min, Math.min(number, max));
         }
-    },
-
-    // move focus
-    "_focusText": function() {
-        document.getElementById("pattern").focus();
     },
 
 }
