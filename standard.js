@@ -251,7 +251,7 @@ Controller.prototype = {
             element.innerHTML = candidate;
 
             // set events for each element
-            element.addEventListener("touchstart", this._tapElement.bind(this));
+            element.addEventListener("touchstart", this._tapElement.bind(this), { "passive": false });
             element.addEventListener("mousedown", this._tapElement.bind(this));
             element.addEventListener("mouseover", this._pointElement.bind(this));
             this._elements.push(element);
