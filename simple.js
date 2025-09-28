@@ -86,7 +86,7 @@ NumberList.prototype = {
 
     // get instance string
     "toString": function() {
-        return this.numbers.reduce((acc, cur) => acc + cur.toString(36), "");
+        return this.numbers.map(elem => elem.toString(36)).join("");
     },
 
 }
