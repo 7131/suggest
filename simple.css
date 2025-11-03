@@ -4,7 +4,7 @@ nav span {
     margin-right: 1ex;
 }
 
-article {
+main {
     line-height: 1.8;
 }
 
@@ -48,7 +48,7 @@ input {
 
 @media (min-width: 768px) {
 
-    article {
+    main {
         line-height: 1.5;
     }
 

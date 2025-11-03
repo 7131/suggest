@@ -4,7 +4,7 @@ nav span {
     margin-right: 1ex;
 }
 
-article {
+main {
     line-height: 1.8;
     margin-bottom: 10ex;
 }
@@ -74,7 +74,7 @@ section.box {
 
 @media (orientation: landscape) {
 
-    article {
+    main {
         line-height: 1.5;
     }
 
