@@ -1,12 +1,12 @@
 @charset "utf-8";
 
-nav span {
-    margin-right: 1ex;
-}
-
-main {
+body {
     line-height: 1.8;
     margin-bottom: 10ex;
+}
+
+nav span {
+    margin-right: 1ex;
 }
 
 input {
@@ -74,7 +74,7 @@ section.box {
 
 @media (orientation: landscape) {
 
-    main {
+    body {
         line-height: 1.5;
     }
 
