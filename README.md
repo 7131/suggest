@@ -1,6 +1,7 @@
 # Siteswap Suggestion Service
 
-https://7131.github.io/suggest/
+English site: https://7131.github.io/suggest/<br>
+Japanese site: https://app.7131.jp/suggest/
 
 This service suggests valid siteswaps by complimenting the numbers for the input pattern.
 The generated siteswaps can also be demonstrated with a juggling simulator.
