@@ -30,14 +30,6 @@ table tr td {
     padding: 0.5ex 1ex;
 }
 
-.valid {
-    background-color: greenyellow;
-}
-
-.error {
-    background-color: pink;
-}
-
 .area {
     height: 35ex;
 }
@@ -64,7 +56,7 @@ table tr td {
     background-color: dodgerblue;
 }
 
-@media (min-width: 768px) {
+@media (orientation: landscape) {
 
     body {
         line-height: 1.5;
