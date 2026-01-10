@@ -4,8 +4,14 @@ body {
     line-height: 1.8;
 }
 
-nav span {
-    margin-right: 1ex;
+nav ul {
+    padding-left: 0ex;
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-right: 2ex;
 }
 
 input {
