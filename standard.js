@@ -201,7 +201,7 @@ Controller.prototype = {
             case 13:
                 // Enter
                 if (0 <= this._position && this._position < this._elements.length) {
-                    this._selectElement(this._elements[this._position].innerHTML);
+                    this._selectElement(this._elements[this._position].textContent);
                 } else {
                     this._clearFrame();
                 }
@@ -248,7 +248,7 @@ Controller.prototype = {
         this._suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
-            element.innerHTML = candidate;
+            element.textContent = candidate;
 
             // set events for each element
             element.addEventListener("touchstart", this._tapElement.bind(this), { "passive": false });
@@ -320,7 +320,7 @@ Controller.prototype = {
     // clear the list of complementary elements
     "_clearFrame": function(e) {
         // clear the elements
-        this._suggest.innerHTML = "";
+        this._suggest.textContent = "";
         this._suggest.classList.add("hidden");
 
         // clear the fields
@@ -330,7 +330,7 @@ Controller.prototype = {
 
     // pattern selection process by tap
     "_tapElement": function(e) {
-        this._selectElement(e.currentTarget.innerHTML);
+        this._selectElement(e.currentTarget.textContent);
         e.preventDefault();
     },
 
