@@ -34,6 +34,11 @@ input {
     background-color: pink;
 }
 
+#balls {
+    display: inline-block;
+    min-height: 1em;
+}
+
 #suggest {
     position: absolute;
     border: 1px solid gray;

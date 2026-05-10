@@ -9,7 +9,7 @@ const NumberList = function(pattern) {
     // set properties
     this.length = this.numbers.length;
     if (this.length == 0) {
-        this.balls = "&nbsp;";
+        this.balls = "";
     } else {
         this.balls = this.numbers.reduce((acc, cur) => acc + cur) / this.length;
     }
@@ -234,7 +234,7 @@ Controller.prototype = {
 
         // get the data
         const numbers = new NumberList(this._input.value);
-        this._balls.innerHTML = numbers.balls;
+        this._balls.textContent = numbers.balls;
         if (numbers.length == 0) {
             return null;
         }
