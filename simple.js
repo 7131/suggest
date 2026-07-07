@@ -1,25 +1,25 @@
 // Number list class
-const NumberList = function(pattern) {
-    // check the arguments
-    if (!Array.isArray(pattern)) {
-        pattern = pattern.split("").map(elem => parseInt(elem, 36));
-    }
-    this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
+class NumberList {
 
-    // set properties
-    this.length = this.numbers.length;
-    if (this.length == 0) {
-        this.balls = "";
-    } else {
-        this.balls = this.numbers.reduce((acc, cur) => acc + cur) / this.length;
-    }
-}
+    // constructor
+    constructor(pattern) {
+        // check the arguments
+        if (!Array.isArray(pattern)) {
+            pattern = pattern.split("").map(elem => parseInt(elem, 36));
+        }
+        this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
 
-// Number list prototype
-NumberList.prototype = {
+        // set properties
+        this.length = this.numbers.length;
+        if (this.length == 0) {
+            this.balls = "";
+        } else {
+            this.balls = this.numbers.reduce((acc, cur) => acc + cur) / this.length;
+        }
+    }
 
     // whether valid siteswap or not
-    "isSiteswap": function() {
+    isSiteswap() {
         // check the numbers one by one
         const drops = new Array(this.length).fill(false);
         for (let i = 0; i < this.length; i++) {
@@ -30,10 +30,10 @@ NumberList.prototype = {
             drops[index] = true;
         }
         return true;
-    },
+    }
 
     // whether jugglable or not
-    "isJugglable": function() {
+    isJugglable() {
         // are all the dropping points apart?
         const drops = [];
         for (let i = 0; i < this.length; i++) {
@@ -50,10 +50,10 @@ NumberList.prototype = {
             }
         }
         return true;
-    },
+    }
 
     // create a candidate list
-    "createCandidates": function(count, length) {
+    createCandidates(count, length) {
         // initialize
         const candidates = [];
         const indexes = new Array(length).fill(0);
@@ -82,45 +82,49 @@ NumberList.prototype = {
             }
         }
         return candidates;
-    },
+    }
 
     // get instance string
-    "toString": function() {
+    toString() {
         return this.numbers.map(elem => elem.toString(36)).join("");
-    },
+    }
 
 }
 
 // Controller class
-const Controller = function() {
-    window.addEventListener("load", this._initialize.bind(this));
-}
+class Controller {
+    #balls;
+    #input;
+    #suggest;
+    #prev;
+    #elements = [];
+    #position = -1;
 
-// Controller prototype
-Controller.prototype = {
+    // constructor
+    constructor() {
+        window.addEventListener("load", this.#initialize.bind(this));
+    }
 
     // initialize the private fields
-    "_initialize": function(e) {
+    #initialize(e) {
         // DOM elements
-        this._balls = document.getElementById("balls");
-        this._input = document.getElementById("pattern");
-        this._suggest = document.getElementById("suggest");
+        this.#balls = document.getElementById("balls");
+        this.#input = document.getElementById("pattern");
+        this.#suggest = document.getElementById("suggest");
 
         // events
-        this._input.addEventListener("keydown", this._selectPattern.bind(this));
-        this._input.addEventListener("input", this._inputPattern.bind(this));
-        this._input.addEventListener("blur", this._clearFrame.bind(this));
+        this.#input.addEventListener("keydown", this.#selectPattern.bind(this));
+        this.#input.addEventListener("input", this.#inputPattern.bind(this));
+        this.#input.addEventListener("blur", this.#clearFrame.bind(this));
 
         // fields
-        this._prev = this._input.value;
-        this._elements = [];
-        this._position = -1;
-        this._clearFrame();
-    },
+        this.#prev = this.#input.value;
+        this.#clearFrame();
+    }
 
     // pattern selection process by keyboard
-    "_selectPattern": function(e) {
-        if (this._elements.length == 0) {
+    #selectPattern(e) {
+        if (this.#elements.length == 0) {
             return;
         }
 
@@ -128,26 +132,26 @@ Controller.prototype = {
         switch (e.keyCode) {
             case 38:
                 // up
-                this._moveElement(this._position - 1);
+                this.#moveElement(this.#position - 1);
                 break;
 
             case 40:
                 // down
-                this._moveElement(this._position + 1);
+                this.#moveElement(this.#position + 1);
                 break;
 
             case 13:
                 // Enter
-                if (0 <= this._position && this._position < this._elements.length) {
-                    this._selectElement(this._elements[this._position].textContent);
+                if (0 <= this.#position && this.#position < this.#elements.length) {
+                    this.#selectElement(this.#elements[this.#position].textContent);
                 } else {
-                    this._clearFrame();
+                    this.#clearFrame();
                 }
                 break;
 
             case 27:
                 // ESC
-                this._clearFrame();
+                this.#clearFrame();
                 break;
 
             default:
@@ -156,15 +160,15 @@ Controller.prototype = {
 
         // cancel default processing
         e.preventDefault();
-    },
+    }
 
     // pattern input process
-    "_inputPattern": function(e) {
+    #inputPattern(e) {
         // check the input
-        if (this._input.value.trim() == this._prev) {
+        if (this.#input.value.trim() == this.#prev) {
             return;
         }
-        const numbers = this._viewData();
+        const numbers = this.#viewData();
         if (numbers == null) {
             return;
         }
@@ -174,110 +178,110 @@ Controller.prototype = {
         if (candidates.length == 0) {
             return;
         }
-        this._elements = [];
+        this.#elements = [];
 
         // create elements one by one
-        this._suggest.classList.remove("hidden");
+        this.#suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
             element.textContent = candidate;
 
             // set events for each element
-            element.addEventListener("touchstart", this._tapElement.bind(this), { "passive": false });
-            element.addEventListener("mousedown", this._tapElement.bind(this));
-            element.addEventListener("mouseover", this._pointElement.bind(this));
-            this._elements.push(element);
-            this._suggest.appendChild(element);
+            element.addEventListener("touchstart", this.#tapElement.bind(this), { "passive": false });
+            element.addEventListener("mousedown", this.#tapElement.bind(this));
+            element.addEventListener("mouseover", this.#pointElement.bind(this));
+            this.#elements.push(element);
+            this.#suggest.appendChild(element);
         }
-    },
+    }
 
     // move element
-    "_moveElement": function(index) {
+    #moveElement(index) {
         // clear current selection
-        if (0 <= this._position && this._position < this._elements.length) {
-            this._elements[this._position].classList.remove("select");
+        if (0 <= this.#position && this.#position < this.#elements.length) {
+            this.#elements[this.#position].classList.remove("select");
         }
         if (index < -1) {
             // move to the end
-            index = this._elements.length - 1;
-        } else if (this._elements.length <= index) {
+            index = this.#elements.length - 1;
+        } else if (this.#elements.length <= index) {
             // don't select
             index = -1;
         }
-        this._position = index;
+        this.#position = index;
         if (index < 0) {
             return;
         }
 
         // select next element
-        const element = this._elements[this._position];
+        const element = this.#elements[this.#position];
         element.classList.add("select");
-    },
+    }
 
     // select element
-    "_selectElement": function(pattern) {
+    #selectElement(pattern) {
         // set the text box property
-        this._input.value = pattern;
-        this._input.setSelectionRange(pattern.length, pattern.length);
+        this.#input.value = pattern;
+        this.#input.setSelectionRange(pattern.length, pattern.length);
 
         // display data
-        this._viewData();
-    },
+        this.#viewData();
+    }
 
     // display data
-    "_viewData": function() {
+    #viewData() {
         // clear the list
-        this._clearFrame();
-        this._prev = this._input.value;
-        this._input.classList.remove("error");
-        this._input.classList.remove("valid");
+        this.#clearFrame();
+        this.#prev = this.#input.value;
+        this.#input.classList.remove("error");
+        this.#input.classList.remove("valid");
 
         // get the data
-        const numbers = new NumberList(this._input.value);
-        this._balls.textContent = numbers.balls;
+        const numbers = new NumberList(this.#input.value);
+        this.#balls.textContent = numbers.balls;
         if (numbers.length == 0) {
             return null;
         }
         if (!numbers.isJugglable()) {
             // not jugglable
-            this._input.classList.add("error");
+            this.#input.classList.add("error");
             return null;
         }
         if (numbers.isSiteswap()) {
             // valid siteswap
-            this._input.classList.add("valid");
+            this.#input.classList.add("valid");
         }
         return numbers;
-    },
+    }
 
     // clear the list of complementary elements
-    "_clearFrame": function(e) {
+    #clearFrame(e) {
         // clear the elements
-        this._suggest.textContent = "";
-        this._suggest.classList.add("hidden");
+        this.#suggest.textContent = "";
+        this.#suggest.classList.add("hidden");
 
         // clear the fields
-        this._elements = [];
-        this._position = -1;
-    },
+        this.#elements = [];
+        this.#position = -1;
+    }
 
     // pattern selection process by tap
-    "_tapElement": function(e) {
-        this._selectElement(e.currentTarget.textContent);
+    #tapElement(e) {
+        this.#selectElement(e.currentTarget.textContent);
         e.preventDefault();
-    },
+    }
 
     // point the element
-    "_pointElement": function(e) {
+    #pointElement(e) {
         // get the position after moving
-        const index = this._elements.indexOf(e.currentTarget);
-        if (index == this._position) {
+        const index = this.#elements.indexOf(e.currentTarget);
+        if (index == this.#position) {
             return;
         }
 
         // move element
-        this._moveElement(index);
-    },
+        this.#moveElement(index);
+    }
 
 }
 

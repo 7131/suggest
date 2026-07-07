@@ -1,27 +1,24 @@
 // Number list class
-const NumberList = function(pattern) {
-    // check the arguments
-    if (!Array.isArray(pattern)) {
-        pattern = pattern.split("").map(elem => parseInt(elem, 36));
-    }
-    this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
+class NumberList {
+    #sum;
 
-    // set properties
-    this.length = this.numbers.length;
-    if (this.length == 0) {
-        this._sum = 0;
-    } else {
-        this._sum = this.numbers.reduce((acc, cur) => acc + cur);
-    }
-}
+    // constructor
+    constructor(pattern) {
+        // check the arguments
+        if (!Array.isArray(pattern)) {
+            pattern = pattern.split("").map(elem => parseInt(elem, 36));
+        }
+        this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
 
-// Number list prototype
-NumberList.prototype = {
+        // set properties
+        this.length = this.numbers.length;
+        this.#sum = this.numbers.reduce((acc, cur) => acc + cur, 0);
+    }
 
     // whether valid siteswap or not
-    "isSiteswap": function() {
+    isSiteswap() {
         // check the number of balls
-        if (this._sum % this.length != 0) {
+        if (this.#sum % this.length != 0) {
             return false;
         }
 
@@ -35,10 +32,10 @@ NumberList.prototype = {
             drops[index] = true;
         }
         return true;
-    },
+    }
 
     // whether jugglable or not
-    "isJugglable": function() {
+    isJugglable() {
         // are all the dropping points apart?
         const drops = [];
         for (let i = 0; i < this.length; i++) {
@@ -55,14 +52,14 @@ NumberList.prototype = {
             }
         }
         return true;
-    },
+    }
 
     // create a candidate list
-    "createCandidates": function(deep, balls, height, count, length) {
+    createCandidates(deep, balls, height, count, length) {
         const candidates = [];
         const max = (this.length + length) * balls;
         const min = max - length * height;
-        if (this._sum < min || max < this._sum) {
+        if (this.#sum < min || max < this.#sum) {
             // return if the value is already too large or too small
             return candidates;
         }
@@ -74,7 +71,7 @@ NumberList.prototype = {
         // create up to the specified number
         while (candidates.length < count && this.depth <= length) {
             const addition = this.indexes.slice(0, this.depth);
-            const total = this._sum + addition.reduce((acc, cur) => acc + cur);
+            const total = this.#sum + addition.reduce((acc, cur) => acc + cur);
 
             // judgement
             if (total == (this.length + this.depth) * balls) {
@@ -86,21 +83,21 @@ NumberList.prototype = {
 
             // next index
             if (deep) {
-                this._setNextByDepth(height);
+                this.#setNextByDepth(height);
             } else {
-                this._setNextByBreadth(height);
+                this.#setNextByBreadth(height);
             }
         }
         return candidates;
-    },
+    }
 
     // get instance string
-    "toString": function() {
+    toString() {
         return this.numbers.map(elem => elem.toString(36)).join("");
-    },
+    }
 
     // depth-first search
-    "_setNextByDepth": function(height) {
+    #setNextByDepth(height) {
         // when the maximum depth is not reached
         if (this.depth < this.indexes.length) {
             this.depth++;
@@ -121,10 +118,10 @@ NumberList.prototype = {
             this.indexes[i]++;
         }
         this.depth = i + 1;
-    },
+    }
 
     // breadth-first search
-    "_setNextByBreadth": function(height) {
+    #setNextByBreadth(height) {
         // update index from current depth
         let i = this.depth - 1;
         this.indexes[i]++;
@@ -138,51 +135,59 @@ NumberList.prototype = {
             }
             this.indexes[i]++;
         }
-    },
+    }
 
 }
 
 // Controller class
-const Controller = function() {
-    window.addEventListener("load", this._initialize.bind(this));
-}
+class Controller {
+    #input;
+    #suggest;
+    #balls;
+    #height;
+    #count;
+    #length;
+    #depth;
+    #facade;
+    #prev = "";
+    #elements = [];
+    #position = -1;
 
-// Controller prototype
-Controller.prototype = {
+    // constructor
+    constructor() {
+        window.addEventListener("load", this.#initialize.bind(this));
+    }
 
     // initialize the private fields
-    "_initialize": function(e) {
+    #initialize(e) {
         // DOM elements
-        this._input = document.getElementById("pattern");
-        this._suggest = document.getElementById("suggest");
-        this._balls = document.getElementById("balls");
-        this._height = document.getElementById("height");
-        this._count = document.getElementById("count");
-        this._length = document.getElementById("length");
-        this._depth = document.getElementById("depth");
+        this.#input = document.getElementById("pattern");
+        this.#suggest = document.getElementById("suggest");
+        this.#balls = document.getElementById("balls");
+        this.#height = document.getElementById("height");
+        this.#count = document.getElementById("count");
+        this.#length = document.getElementById("length");
+        this.#depth = document.getElementById("depth");
 
         // events
-        this._input.addEventListener("keydown", this._selectPattern.bind(this));
-        this._input.addEventListener("input", this._inputPattern.bind(this));
-        this._input.addEventListener("blur", this._clearFrame.bind(this));
-        this._balls.addEventListener("input", this._changeBalls.bind(this));
-        this._height.addEventListener("input", this._changeHeight.bind(this));
-        this._count.addEventListener("input", this._changeCount.bind(this));
-        this._length.addEventListener("input", this._changeLength.bind(this));
-        document.getElementById("start").addEventListener("click", this._startJuggle.bind(this));
-        document.getElementById("stop").addEventListener("click", this._stopJuggle.bind(this));
+        this.#input.addEventListener("keydown", this.#selectPattern.bind(this));
+        this.#input.addEventListener("input", this.#inputPattern.bind(this));
+        this.#input.addEventListener("blur", this.#clearFrame.bind(this));
+        this.#balls.addEventListener("input", this.#changeBalls.bind(this));
+        this.#height.addEventListener("input", this.#changeHeight.bind(this));
+        this.#count.addEventListener("input", this.#changeCount.bind(this));
+        this.#length.addEventListener("input", this.#changeLength.bind(this));
+        document.getElementById("start").addEventListener("click", this.#startJuggling.bind(this));
+        document.getElementById("stop").addEventListener("click", this.#stopJuggling.bind(this));
 
         // clear the list
-        this._prev = "";
-        this._elements = [];
-        this._position = -1;
-        this._clearFrame();
-        this._facade = new jmotion.Facade("#board");
-    },
+        this.#clearFrame();
+        this.#facade = new jmotion.Facade("#board");
+    }
 
     // pattern selection process by keyboard
-    "_selectPattern": function(e) {
-        if (this._elements.length == 0) {
+    #selectPattern(e) {
+        if (this.#elements.length == 0) {
             return;
         }
 
@@ -190,26 +195,26 @@ Controller.prototype = {
         switch (e.keyCode) {
             case 38:
                 // up
-                this._moveElement(this._position - 1);
+                this.#moveElement(this.#position - 1);
                 break;
 
             case 40:
                 // down
-                this._moveElement(this._position + 1);
+                this.#moveElement(this.#position + 1);
                 break;
 
             case 13:
                 // Enter
-                if (0 <= this._position && this._position < this._elements.length) {
-                    this._selectElement(this._elements[this._position].textContent);
+                if (0 <= this.#position && this.#position < this.#elements.length) {
+                    this.#selectElement(this.#elements[this.#position].textContent);
                 } else {
-                    this._clearFrame();
+                    this.#clearFrame();
                 }
                 break;
 
             case 27:
                 // ESC
-                this._clearFrame();
+                this.#clearFrame();
                 break;
 
             default:
@@ -218,176 +223,176 @@ Controller.prototype = {
 
         // cancel default processing
         e.preventDefault();
-    },
+    }
 
     // pattern input process
-    "_inputPattern": function(e) {
+    #inputPattern(e) {
         // check the input
-        const pattern = this._input.value.trim();
-        if (pattern == this._prev) {
+        const pattern = this.#input.value.trim();
+        if (pattern == this.#prev) {
             return;
         }
-        const numbers = this._viewData();
+        const numbers = this.#viewData();
         if (numbers == null) {
             return;
         }
 
         // create a candidate list
-        const balls = this._getValidInt(this._balls.value, 1, 35);
-        const height = this._getValidInt(this._height.value, balls, 35);
-        const count = this._getValidInt(this._count.value, 5, 100);
-        const length = this._getValidInt(this._length.value, 1, 5);
-        const deep = this._depth.checked;
+        const balls = this.#getValidInt(this.#balls.value, 1, 35);
+        const height = this.#getValidInt(this.#height.value, balls, 35);
+        const count = this.#getValidInt(this.#count.value, 5, 100);
+        const length = this.#getValidInt(this.#length.value, 1, 5);
+        const deep = this.#depth.checked;
         const candidates = numbers.createCandidates(deep, balls, height, count, length);
         if (candidates.length == 0) {
             return;
         }
-        this._elements = [];
+        this.#elements = [];
 
         // create elements one by one
-        this._suggest.classList.remove("hidden");
+        this.#suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
             element.textContent = candidate;
 
             // set events for each element
-            element.addEventListener("touchstart", this._tapElement.bind(this), { "passive": false });
-            element.addEventListener("mousedown", this._tapElement.bind(this));
-            element.addEventListener("mouseover", this._pointElement.bind(this));
-            this._elements.push(element);
-            this._suggest.appendChild(element);
+            element.addEventListener("touchstart", this.#tapElement.bind(this), { "passive": false });
+            element.addEventListener("mousedown", this.#tapElement.bind(this));
+            element.addEventListener("mouseover", this.#pointElement.bind(this));
+            this.#elements.push(element);
+            this.#suggest.appendChild(element);
         }
-    },
+    }
 
     // move element
-    "_moveElement": function(index) {
+    #moveElement(index) {
         // clear current selection
-        if (0 <= this._position && this._position < this._elements.length) {
-            this._elements[this._position].classList.remove("select");
+        if (0 <= this.#position && this.#position < this.#elements.length) {
+            this.#elements[this.#position].classList.remove("select");
         }
         if (index < -1) {
             // move to the end
-            index = this._elements.length - 1;
-        } else if (this._elements.length <= index) {
+            index = this.#elements.length - 1;
+        } else if (this.#elements.length <= index) {
             // don't select
             index = -1;
         }
-        this._position = index;
+        this.#position = index;
         if (index < 0) {
             return;
         }
 
         // select next element
-        const element = this._elements[this._position];
+        const element = this.#elements[this.#position];
         element.classList.add("select");
-    },
+    }
 
     // select element
-    "_selectElement": function(pattern) {
+    #selectElement(pattern) {
         // set the text box property
-        this._input.value = pattern;
-        this._input.setSelectionRange(pattern.length, pattern.length);
+        this.#input.value = pattern;
+        this.#input.setSelectionRange(pattern.length, pattern.length);
 
         // display data
-        this._viewData();
-    },
+        this.#viewData();
+    }
 
     // display data
-    "_viewData": function() {
+    #viewData() {
         // clear the list
-        this._clearFrame();
-        this._prev = this._input.value;
-        this._input.classList.remove("error");
-        this._input.classList.remove("valid");
+        this.#clearFrame();
+        this.#prev = this.#input.value;
+        this.#input.classList.remove("error");
+        this.#input.classList.remove("valid");
 
         // get the data
-        const numbers = new NumberList(this._input.value);
+        const numbers = new NumberList(this.#input.value);
         if (numbers.length == 0) {
             return null;
         }
         if (!numbers.isJugglable()) {
             // not jugglable
-            this._input.classList.add("error");
+            this.#input.classList.add("error");
             return null;
         }
         if (numbers.isSiteswap()) {
             // valid siteswap
-            this._input.classList.add("valid");
+            this.#input.classList.add("valid");
         }
         return numbers;
-    },
+    }
 
     // clear the list of complementary elements
-    "_clearFrame": function(e) {
+    #clearFrame(e) {
         // clear the elements
-        this._suggest.textContent = "";
-        this._suggest.classList.add("hidden");
+        this.#suggest.textContent = "";
+        this.#suggest.classList.add("hidden");
 
         // clear the fields
-        this._elements = [];
-        this._position = -1;
-    },
+        this.#elements = [];
+        this.#position = -1;
+    }
 
     // pattern selection process by tap
-    "_tapElement": function(e) {
-        this._selectElement(e.currentTarget.textContent);
+    #tapElement(e) {
+        this.#selectElement(e.currentTarget.textContent);
         e.preventDefault();
-    },
+    }
 
     // point the element
-    "_pointElement": function(e) {
+    #pointElement(e) {
         // get the position after moving
-        const index = this._elements.indexOf(e.currentTarget);
-        if (index == this._position) {
+        const index = this.#elements.indexOf(e.currentTarget);
+        if (index == this.#position) {
             return;
         }
 
         // move element
-        this._moveElement(index);
-    },
+        this.#moveElement(index);
+    }
 
     // start button process
-    "_startJuggle": function(e) {
-        const numbers = new NumberList(this._input.value);
-        this._facade.startJuggling(numbers.toString());
-    },
+    #startJuggling(e) {
+        const numbers = new NumberList(this.#input.value);
+        this.#facade.startJuggling(numbers.toString());
+    }
 
     // stop button process
-    "_stopJuggle": function(e) {
-        this._facade.stopJuggling();
-    },
+    #stopJuggling(e) {
+        this.#facade.stopJuggling();
+    }
 
     // the number of balls changing process
-    "_changeBalls": function(e) {
+    #changeBalls(e) {
         // number of balls
-        this._setStatus(e.currentTarget, 1, 35);
-        const min = this._getValidInt(e.currentTarget.value, 1, 35);
+        this.#setStatus(e.currentTarget, 1, 35);
+        const min = this.#getValidInt(e.currentTarget.value, 1, 35);
 
         // maximum height
-        this._setStatus(this._height, min, 35);
-    },
+        this.#setStatus(this.#height, min, 35);
+    }
 
     // maximum height changing process
-    "_changeHeight": function(e) {
+    #changeHeight(e) {
         // number of balls
-        const min = this._getValidInt(this._balls.value, 1, 35);
+        const min = this.#getValidInt(this.#balls.value, 1, 35);
 
         // maximum height
-        this._setStatus(e.currentTarget, min, 35);
-    },
+        this.#setStatus(e.currentTarget, min, 35);
+    }
 
     // maximum number of candidates changing process
-    "_changeCount": function(e) {
-        this._setStatus(e.currentTarget, 5, 100);
-    },
+    #changeCount(e) {
+        this.#setStatus(e.currentTarget, 5, 100);
+    }
 
     // maximum complement length changing process
-    "_changeLength": function(e) {
-        this._setStatus(e.currentTarget, 1, 5);
-    },
+    #changeLength(e) {
+        this.#setStatus(e.currentTarget, 1, 5);
+    }
 
     // set the text box status
-    "_setStatus": function(element, min, max) {
+    #setStatus(element, min, max) {
         const number = parseInt(element.value, 10);
         if (isNaN(number) || number < min || max < number) {
             // invalid
@@ -396,17 +401,17 @@ Controller.prototype = {
             // valid
             element.classList.remove("error");
         }
-    },
+    }
 
     // get valid integer value
-    "_getValidInt": function(text, min, max) {
+    #getValidInt(text, min, max) {
         const number = parseInt(text, 10);
         if (isNaN(number)) {
             return min;
         } else {
             return Math.max(min, Math.min(number, max));
         }
-    },
+    }
 
 }
 
