@@ -4,7 +4,9 @@ class NumberList {
     // constructor
     constructor(pattern) {
         // check the arguments
-        if (!Array.isArray(pattern)) {
+        if (Array.isArray(pattern)) {
+            pattern = pattern.map(elem => parseInt(elem, 10));
+        } else {
             pattern = pattern.split("").map(elem => parseInt(elem, 36));
         }
         this.numbers = pattern.filter(elem => !isNaN(elem) && 0 <= elem);
