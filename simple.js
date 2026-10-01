@@ -54,14 +54,14 @@ class NumberList {
         return true;
     }
 
-    // create a candidate list
-    createCandidates(count, length) {
+    // generate a candidate list
+    generateCandidates(count, length) {
         // initialize
         const candidates = [];
         const indexes = new Array(length).fill(0);
         let depth = 1;
 
-        // create in order
+        // generate in order
         while (candidates.length < count && depth <= length) {
             // judgement
             const next = new NumberList(this.numbers.concat(indexes.slice(0, depth)));
@@ -175,14 +175,14 @@ class Controller {
             return;
         }
 
-        // create a candidate list
-        const candidates = numbers.createCandidates(10, 3);
+        // generate a candidate list
+        const candidates = numbers.generateCandidates(10, 3);
         if (candidates.length == 0) {
             return;
         }
         this.#elements = [];
 
-        // create elements one by one
+        // generate elements one by one
         this.#suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");

@@ -56,8 +56,8 @@ class NumberList {
         return true;
     }
 
-    // create a candidate list
-    createCandidates(deep, balls, height, count, length) {
+    // generate a candidate list
+    generateCandidates(deep, balls, height, count, length) {
         const candidates = [];
         const max = (this.length + length) * balls;
         const min = max - length * height;
@@ -70,7 +70,7 @@ class NumberList {
         this.indexes = new Array(length).fill(0);
         this.depth = 1;
 
-        // create up to the specified number
+        // generate up to the specified number
         while (candidates.length < count && this.depth <= length) {
             const addition = this.indexes.slice(0, this.depth);
             const total = this.#sum + addition.reduce((acc, cur) => acc + cur);
@@ -239,19 +239,19 @@ class Controller {
             return;
         }
 
-        // create a candidate list
+        // generate a candidate list
         const balls = this.#getValidInt(this.#balls.value, 1, 35);
         const height = this.#getValidInt(this.#height.value, balls, 35);
         const count = this.#getValidInt(this.#count.value, 5, 100);
         const length = this.#getValidInt(this.#length.value, 1, 5);
         const deep = this.#depth.checked;
-        const candidates = numbers.createCandidates(deep, balls, height, count, length);
+        const candidates = numbers.generateCandidates(deep, balls, height, count, length);
         if (candidates.length == 0) {
             return;
         }
         this.#elements = [];
 
-        // create elements one by one
+        // generate elements one by one
         this.#suggest.classList.remove("hidden");
         for (const candidate of candidates) {
             const element = document.createElement("div");
