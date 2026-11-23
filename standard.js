@@ -194,19 +194,16 @@ class Controller {
         }
 
         // process for each key
-        switch (e.keyCode) {
-            case 38:
-                // up
+        switch (e.key) {
+            case "ArrowUp":
                 this.#moveElement(this.#position - 1);
                 break;
 
-            case 40:
-                // down
+            case "ArrowDown":
                 this.#moveElement(this.#position + 1);
                 break;
 
-            case 13:
-                // Enter
+            case "Enter":
                 if (0 <= this.#position && this.#position < this.#elements.length) {
                     this.#selectElement(this.#elements[this.#position].textContent);
                 } else {
@@ -214,8 +211,7 @@ class Controller {
                 }
                 break;
 
-            case 27:
-                // ESC
+            case "Escape":
                 this.#clearFrame();
                 break;
 
